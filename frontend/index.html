@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanic Data Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Titanic Dashboard</div>
+        <div class="nav-buttons" id="nav-buttons">
+            <button id="load-btn" onclick="fetchAllData()">Load Data</button>
+        </div>
+    </nav>
+
+    <!-- Dropdowns para Processamento -->
+    <div id="processing-container" style="display: none;">
+        <select id="processing-type">
+            <option value="">Choose Processing</option>
+            <option value="average">Average</option>
+            <option value="sum">Total</option>
+            <option value="min">Minimum</option>
+            <option value="max">Maximum</option>
+        </select>
+
+        <select id="column-type">
+            <option value="">Choose Column</option>
+            <option value="Age">Age</option>
+            <option value="Fare">Fare</option>
+            <option value="Pclass">Pclass</option>
+        </select>
+
+        <button onclick="processData()">Search</button>
+        <span id="processing-result"></span>
+    </div>
+
+    <!-- Tabela -->
+    <div id="data-table"></div>
+
+    <!-- Paginação -->
+    <div id="pagination" style="display: none;"></div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Developed by: Your Team</p>
+        <p>Project: Titanic Data Analysis</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
