@@ -1,8 +1,8 @@
-from menus.data_import_menu import data_import_menu
-from menus.data_export_menu import data_export_menu
-from menus.data_processing_menu import data_processing_menu
-from menus.data_visualization_menu import data_visualization_menu
-from menus.interactions_menu import clean, press_any_key_with_animation
+from .data_import_menu import data_import_menu
+from .data_export_menu import data_export_menu
+from .data_processing_menu import data_processing_menu
+from .data_visualization_menu import data_visualization_menu
+from .interactions_menu import clean, press_any_key_with_animation
 from dotenv import load_dotenv
 import os
 
@@ -10,9 +10,9 @@ import os
 def main_menu():
     load_dotenv()
     db_path = os.getenv('DB')
+    press_any_key_with_animation()
 
     while True:
-        press_any_key_with_animation()
         clean()
 
         print("\n" + "#" * 10 + " Main Menu " + "#" * 10)
@@ -34,7 +34,7 @@ def main_menu():
                 data_export_menu(db_path)
             elif choice == "5":
                 print("Exiting the application. Goodbye!")
-                break
+                return
             else:
                 raise Exception("\nInsert a valid number.")
         except Exception as e:

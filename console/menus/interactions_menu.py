@@ -12,7 +12,7 @@ def clean():
 
 def press_any_key_with_animation():
     """
-    Displays 'Press any key to continue...' with an animated boat on the same lines.
+    Displays 'Press ENTER to continue...' with an animated boat on the same lines.
     """
     stop_animation = [False] 
     boat_frames = [
@@ -35,7 +35,7 @@ def press_any_key_with_animation():
                 first_interaction = True
 
             # Mensagem fixa
-            print(f"Press any key to continue{'.' * (dots % 4)}")
+            print(f"Press ENTER to continue{'.' * (dots % 4)}")
             print(boat_frames[dots % len(boat_frames)])
             dots += 1
             time.sleep(0.3) 

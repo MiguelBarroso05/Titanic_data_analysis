@@ -1,11 +1,12 @@
 import pandas as pd
 import sqlite3
 import matplotlib.pyplot as plt
+from .interactions_menu import clean
 
 def data_visualization_menu(db_path):
     with sqlite3.connect(db_path) as conn:
         df = pd.read_sql("SELECT * FROM titanic_data", conn)
-
+    clean()
     print("\n### Data Visualization Menu ###")
     print("1. Bar Chart: Passenger Count by Class")
     print("2. Pie Chart: Survival Rate by Sex")

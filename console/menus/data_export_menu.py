@@ -1,5 +1,5 @@
-from modules.data_export_module import export_to_csv
-from menus.interactions_menu import clean, press_any_key_with_animation
+from .interactions_menu import clean, press_any_key_with_animation
+from ..modules.data_export_module import export_to_csv
 import os
 
 
@@ -25,7 +25,7 @@ def data_export_menu(db_path):
             if not file_name.lower().endswith(".csv"):
                 file_name += ".csv"
 
-            export_path = os.path.join("data", file_name)
+            export_path = os.path.join("data/exports", file_name)
 
             if not os.path.exists("data"):
                 os.makedirs("data")

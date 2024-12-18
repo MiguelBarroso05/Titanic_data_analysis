@@ -1,5 +1,5 @@
-from menus.interactions_menu import clean, press_any_key_with_animation
-from modules.data_import_module import (
+from .interactions_menu import clean, press_any_key_with_animation
+from ..modules.data_import_module import (
     load_csv,
     clean_and_process_data,
     save_to_database,
@@ -19,7 +19,7 @@ def data_import_menu(db_path):
 
         try:
             file_name = input("Enter the name of the CSV file (example.csv): ")
-            file_path = os.path.join("data", file_name)
+            file_path = os.path.join("data/imports", file_name)
 
             if file_name == "":
                 print("Operation canceled.")
