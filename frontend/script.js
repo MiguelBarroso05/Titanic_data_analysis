@@ -1,69 +1,31 @@
 const apiBaseUrl = "http://127.0.0.1:8000/api";
 
-
-async function fetchAllData() {
-    try {
-        const response = await fetch(`${apiBaseUrl}/data`);
-        if (!response.ok) throw new Error("Failed to fetch data");
-
-        const data = await response.json();
-        displayDataAsTable(data);
-    } catch (error) {
-        console.error("Error:", error);
-        alert("An error occurred while fetching data.");
-    }
-}
-
-
-function displayDataAsTable(data) {
-    const container = document.getElementById("data-table");
-
-    if (data.length === 0) {
-        container.innerHTML = "<p>No data available.</p>";
-        return;
-    }
-
-    let table = "<table border='1' cellspacing='0' cellpadding='5'>";
-    table += "<tr>";
-    Object.keys(data[0]).forEach(key => {
-        table += `<th>${key}</th>`;
-    });
-    table += "</tr>";
-
-    data.forEach(row => {
-        table += "<tr>";
-        Object.values(row).forEach(value => {
-            table += `<td>${value}</td>`;
-        });
-        table += "</tr>";
-    });
-
-    table += "</table>";
-    container.innerHTML = table;
-}
-
-
 let dataLoaded = false;
 
 // Fetch All Data
 async function fetchAllData() {
     try {
-        const response = await fetch("http://127.0.0.1:8000/api/data");
+        showLoading()
+        const response = await fetch(`${apiBaseUrl}/data`);
         if (!response.ok) throw new Error("Failed to fetch data");
 
         const data = await response.json();
+        if (data.message) {
+            alert(data.message); // Caso a tabela esteja vazia
+            return;
+        }
+
         displayDataAsTable(data);
 
-        // Esconder o botão de load e mostrar os restantes
+        // Esconder o botão de Load e mostrar os novos
         document.getElementById("load-btn").style.display = "none";
-        document.getElementById("nav-buttons").innerHTML += `
+        document.getElementById("nav-buttons").innerHTML = `
             <button onclick="showProcessingMenu()">Data Processing</button>
             <button onclick="showVisualization()">Data Visualization</button>
         `;
-        dataLoaded = true;
     } catch (error) {
-        console.error("Error:", error);
-        alert("Failed to load data.");
+        console.error("Error fetching data:", error);
+        alert("An error occurred while fetching data.");
     }
 }
 
@@ -73,22 +35,34 @@ function showProcessingMenu() {
 }
 
 // Mostrar Dados em Tabela
-function displayDataAsTable(data) {
+function displayDataAsTable(data, page = 1, rowsPerPage = 10) {
     const container = document.getElementById("data-table");
-    container.innerHTML = ""; // Resetar
+    const totalRows = data.length;
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedData = data.slice(start, end);
 
     let table = "<table border='1'><tr>";
     Object.keys(data[0]).forEach(key => table += `<th>${key}</th>`);
     table += "</tr>";
 
-    data.forEach(row => {
+    paginatedData.forEach(row => {
         table += "<tr>";
         Object.values(row).forEach(value => table += `<td>${value}</td>`);
         table += "</tr>";
     });
 
     table += "</table>";
+
     container.innerHTML = table;
+
+    // Adicionar controles de paginação
+    const pagination = document.getElementById("pagination-controls");
+    pagination.innerHTML = `
+        <button ${page === 1 ? "disabled" : ""} onclick="displayDataAsTable(data, ${page - 1}, ${rowsPerPage})">Previous</button>
+        <span>Page ${page} of ${Math.ceil(totalRows / rowsPerPage)}</span>
+        <button ${end >= totalRows ? "disabled" : ""} onclick="displayDataAsTable(data, ${page + 1}, ${rowsPerPage})">Next</button>
+    `;
 }
 
 // Processamento de Dados
@@ -109,4 +83,10 @@ async function processData() {
 // Placeholder de Visualização
 function showVisualization() {
     alert("Data visualization coming soon!");
+}
+
+
+function showLoading() {
+    const container = document.getElementById("data-table");
+    container.innerHTML = "<p>Loading...</p>";
 }
