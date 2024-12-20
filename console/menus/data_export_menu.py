@@ -17,7 +17,7 @@ def data_export_menu(db_path):
 
             if file_name == "":
                 print("Operation canceled.")
-                return
+                break
 
             if any(char in file_name for char in invalid_chars):
                 raise ValueError(f"File name contains invalid characters: {invalid_chars}")
@@ -32,11 +32,11 @@ def data_export_menu(db_path):
 
             export_to_csv(db_path, table_name, export_path)
             print(f"File successfully exported to: {export_path}")
-            return
+            break
 
         except ValueError as ve:
             print(f"Error: {ve}")
-            press_any_key_with_animation()
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
-            press_any_key_with_animation()
+
+    press_any_key_with_animation()

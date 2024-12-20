@@ -10,8 +10,10 @@ import os
 def main_menu():
     load_dotenv()
     db_path = os.getenv('DB')
-    press_any_key_with_animation()
 
+    clean()
+    press_any_key_with_animation()
+    
     while True:
         clean()
 

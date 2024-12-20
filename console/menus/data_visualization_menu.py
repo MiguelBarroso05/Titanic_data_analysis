@@ -1,6 +1,8 @@
 import pandas as pd
 import sqlite3
 import matplotlib.pyplot as plt
+
+from .bar_chart_menu import bar_chart_menu
 from .interactions_menu import clean
 
 def data_visualization_menu(db_path):
@@ -15,10 +17,7 @@ def data_visualization_menu(db_path):
     choice = input("Choose an option: ")
 
     if choice == "1":
-        df['Pclass'].value_counts().plot(kind='bar', title="Passenger Count by Class")
-        plt.xlabel("Class")
-        plt.ylabel("Count")
-        plt.show()
+       bar_chart_menu(df)
     elif choice == "2":
         survival_rate = df.groupby('Sex')['Survived'].mean()
         survival_rate.plot(kind='pie', autopct='%1.1f%%', title="Survival Rate by Sex")

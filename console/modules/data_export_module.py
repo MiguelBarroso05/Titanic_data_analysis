@@ -14,7 +14,6 @@ def export_to_csv(db_path, table_name, export_path):
         df = pd.read_sql_query(query, conn)
 
         df.to_csv(export_path, index=False)
-        print(f"Data successfully exported to '{export_path}'.")
         
         conn.close()
     except Exception as e:

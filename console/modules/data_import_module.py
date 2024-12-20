@@ -29,21 +29,25 @@ def clean_and_process_data(df):
         df['Age'] = df['Age'].fillna(df['Age'].mean())
 
     if 'Fare' in df.columns:
-        df['Fare'] = df['Fare'].fillna(0)
+        df['Fare'] = df['Fare']
 
     df = df.fillna("Unknown")
 
     if 'Age' in df.columns:
-        df['Age'] = df['Age'].astype(float)
+        df['Age'] = df['Age'].astype(int)
 
     if 'Pclass' in df.columns:
         df['Pclass'] = df['Pclass'].astype(int)
 
     # Create Age_Milliseconds column using epoch
     epoch = datetime(1970, 1, 1)
+    titanic_year = 1912
+    delta_years = 1970 - titanic_year
+    delta_days = delta_years * 365.25 
+
     if 'Age' in df.columns:
         df['Age_Milliseconds'] = df['Age'].apply(
-            lambda age: int((epoch + timedelta(days=age * 365.25)).timestamp() * 1000)
+            lambda age: int(((epoch - timedelta(days=delta_days)) - timedelta(days=age * 365.25)).timestamp() * 1000)
         )
 
     return df

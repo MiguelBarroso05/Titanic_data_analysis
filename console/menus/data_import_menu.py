@@ -23,7 +23,7 @@ def data_import_menu(db_path):
 
             if file_name == "":
                 print("Operation canceled.")
-                return
+                break
             
             df = load_csv(file_path)
 
@@ -31,7 +31,7 @@ def data_import_menu(db_path):
                 overwrite = input("Database already contains data. Do you want to overwrite? (y/n): ").lower()
                 if overwrite != 'y':
                     print("Operation canceled.")
-                    return
+                    break
                 drop_existing_table(db_path, table_name)
 
             df = clean_and_process_data(df)
@@ -39,14 +39,14 @@ def data_import_menu(db_path):
             save_to_database(df, db_path, table_name)
 
             print("Data imported and processed successfully!")
-            return
+            break
 
         except FileNotFoundError:
             print("Error: File not found.")
-            press_any_key_with_animation()
+
         except ValueError as ve:
             print(f"Error: {ve}")
-            press_any_key_with_animation()
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
-            press_any_key_with_animation()
+
+    press_any_key_with_animation()
