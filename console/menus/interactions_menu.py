@@ -4,6 +4,12 @@ import sys
 import os
 
 def clean():
+    """
+    Clears the terminal screen depending on the operating system.
+    
+    This function uses the respective terminal commands to clear the screen, 
+    depending on whether the operating system is Windows (nt) or Unix-based (posix).
+    """
     if os.name == 'nt':  
         os.system('cls')
     else:  

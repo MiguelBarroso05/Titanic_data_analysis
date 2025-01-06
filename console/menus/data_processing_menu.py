@@ -5,6 +5,22 @@ from .interactions_menu import *
 from .average_menu import average_menu
 from .sum_menu import sum_menu
 def data_processing_menu(db_path):
+    """
+    Displays a menu for data processing operations on the given database.
+
+    The user can select from the following options:
+
+    1. Show Summary Statistics: Displays summary statistics of the dataframe.
+    2. Calculate Average: Calculates the average of the given column in the dataframe.
+    3. Calculate Total Sum: Calculates the sum of the given column in the dataframe.
+    0. Return to Main Menu: Returns to the main menu.
+
+    Parameters:
+        db_path (str): The path to the SQLite database containing the data to be processed.
+
+    Returns:
+        None
+    """
     while True:
         try:
             with sqlite3.connect(db_path) as conn:
@@ -15,7 +31,7 @@ def data_processing_menu(db_path):
             print("1. Show Summary Statistics")
             print("2. Calculate Average")
             print("3. Calculate Total Sum")
-            print("4. Return to Main Menu")
+            print("0. Return to Main Menu")
 
             choice = input("Choose an option: ")
             clean()
@@ -29,7 +45,7 @@ def data_processing_menu(db_path):
                     average_menu(df)  
                 case "3":
                     sum_menu(df)  
-                case "4":
+                case "0":
                     print("Returning to Main Menu...")
                     break  
                 case _:

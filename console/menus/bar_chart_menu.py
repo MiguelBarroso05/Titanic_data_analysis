@@ -1,7 +1,22 @@
-import matplotlib.pyplot as plt
+from ..modules.data_visualization_module import *
 from .interactions_menu import *
 
 def bar_chart_menu(df):
+    """
+    Displays a menu for generating various bar charts and comparisons based on
+    the provided dataframe. The user can select different parameters to visualize
+    data related to survival, gender, passenger class, embarkation port, and more.
+
+    Parameters:
+        df (pd.DataFrame): The dataframe containing the data to be visualized.
+
+    Returns:
+        None
+    """
+
+    # Convert 1 to 'Survived' and 0 to 'Died' in the 'Survived' column
+    df['Survived'] = df['Survived'].replace({1: 'Survived', 0: 'Died'})
+
     while True:
         clean()
         print("\n### Select a parameter ###")
@@ -19,7 +34,7 @@ def bar_chart_menu(df):
         print("12. Average Age by Survived")
         print("13. Survived by Pclass (Stacked)")
         print("14. Sex by Embarked (Stacked)")
-        print("15. Exit")
+        print("0. Exit")
 
         try:
             choice = int(input("Choose an option: "))
@@ -27,71 +42,43 @@ def bar_chart_menu(df):
 
             match choice:
                 case 1:
-                    bar_chart(df['Survived'])
+                    bar_chart(df['Survived'], "Survival Count", "Survival Status", "Count")
                 case 2:
-                    bar_chart(df['Sex'])
+                    bar_chart(df['Sex'], "Gender Distribution", "Gender", "Count")
                 case 3:
-                    bar_chart(df['Pclass'])
+                    bar_chart(df['Pclass'], "Passenger Class Distribution", "Passenger Class", "Count")
                 case 4:
-                    bar_chart(df['Embarked'])
+                    bar_chart(df['Embarked'], "Embarkation Port Distribution", "Port", "Count")
                 case 5:
-                    survival_by_category(df, 'Sex')
+                    survival_by_category(df, 'Sex', "Survival Rate by Gender", "Gender", "Survival Rate")
                 case 6:
-                    survival_by_category(df, 'Pclass')
+                    survival_by_category(df, 'Pclass', "Survival Rate by Passenger Class", "Passenger Class", "Survival Rate")
                 case 7:
-                    survival_by_category(df, 'Embarked')
+                    survival_by_category(df, 'Embarked', "Survival Rate by Embarkation Port", "Port", "Survival Rate")
                 case 8:
-                    category_comparison(df, 'Pclass', 'Sex')
+                    category_comparison(df, 'Pclass', 'Sex', "Passenger Class vs Gender Survival Rate", "Passenger Class", "Survival Rate")
                 case 9:
-                    category_comparison(df, 'Pclass', 'Embarked')
+                    category_comparison(df, 'Pclass', 'Embarked', "Passenger Class vs Embarkation Port Survival Rate", "Passenger Class", "Survival Rate")
                 case 10:
-                    average_value_by_category(df, 'Fare', 'Pclass')
+                    average_value_by_category(df, 'Fare', 'Pclass', "Average Fare by Passenger Class", "Passenger Class", "Average Fare")
                 case 11:
-                    average_value_by_category(df, 'Age', 'Pclass')
+                    average_value_by_category(df, 'Age', 'Pclass', "Average Age by Passenger Class", "Passenger Class", "Average Age")
                 case 12:
-                    average_value_by_category(df, 'Age', 'Survived')
+                    average_value_by_category(df, 'Age', 'Survived', "Average Age by Survival Status", "Survival Status", "Average Age")
                 case 13:
-                    stacked_bar_chart(df, 'Survived', 'Pclass')
+                    stacked_bar_chart(df, 'Survived', 'Pclass', "Survival Count by Passenger Class", "Passenger Class", "Count")
                 case 14:
-                    stacked_bar_chart(df, 'Sex', 'Embarked')
-                case 15:
-                    return
+                    stacked_bar_chart(df, 'Sex', 'Embarked', "Gender Count by Embarkation Port", "Embarkation Port", "Count")
+                case 0:
+                    break
                 case _:
                     raise ValueError
             press_any_key_with_animation()
         except ValueError:
             print("Invalid option. Please enter a valid number.")
             press_any_key_with_animation()
-
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            press_any_key_with_animation()
 
 # Helper functions
-
-def bar_chart(data):
-    # Logic for creating a bar chart (you can use matplotlib or seaborn)
-    plt.bar(data.value_counts().index, data.value_counts().values)
-    plt.show()
-    
-
-def survival_by_category(df, category):
-    # Plot survival rate based on the chosen category (e.g., 'Sex', 'Pclass', 'Embarked')
-    df['Survived'].groupby(df[category]).mean().plot(kind='bar')
-    plt.show()
-    
-
-def category_comparison(df, category1, category2):
-    # Plot comparison between two categories (e.g., 'Pclass' vs 'Sex')
-    df['Survived'].groupby([df[category1], df[category2]]).mean().unstack().plot(kind='bar')
-    plt.show()
-    
-
-def average_value_by_category(df, value_column, category_column):
-    # Plot average value (e.g., 'Fare', 'Age') by a specific category (e.g., 'Pclass', 'Survived')
-    df.groupby(category_column)[value_column].mean().plot(kind='bar')
-    plt.show()
-    
-
-def stacked_bar_chart(df, value_column, category_column):
-    # Create stacked bar charts based on the specified columns
-    df[value_column].groupby(df[category_column]).value_counts().unstack().plot(kind='bar')
-    plt.show()
-    

@@ -2,6 +2,19 @@ from .interactions_menu import *
 from ..modules.data_processing_module import calculate_average
 
 def average_menu(df):
+    """
+    Menu to calculate the average of a given column in the dataframe.
+
+    The user can select from the following options:
+
+    1. Age
+    2. Siblings/Spouses
+    3. Parent/Children
+    4. Fare
+    0. Exit
+
+    Each option will show the average of the selected parameter in the dataframe.
+    """
     while True:
         clean()
         print("\n### Select a parameter ###")
@@ -9,7 +22,7 @@ def average_menu(df):
         print("2. Siblings/Spouses")
         print("3. Parent/Children")
         print("4. Fare")
-        print("5. Exit")
+        print("0. Exit")
 
         try:
             choice = int(input("Choose an option: "))
@@ -24,7 +37,7 @@ def average_menu(df):
                     calculate_average(df['Parch'])
                 case 4:
                     calculate_average(df['Fare'])
-                case 5:                   
+                case 0:                   
                     return 
                 case _:
                     raise ValueError

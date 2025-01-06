@@ -2,6 +2,18 @@ from .interactions_menu import *
 from ..modules.data_processing_module import *
 
 def sum_menu(df):
+    """
+    Menu to calculate the sum of a given column in the dataframe.
+    Allows the user to choose from the following options:
+
+    1. Survived
+    2. Women/Men
+    3. Total People Embarked (by port)
+    4. Total Passengers
+    0. Exit
+
+    Each option will show the sum of the selected parameter in the dataframe.
+    """
     while True:
         clean()
 
@@ -10,7 +22,7 @@ def sum_menu(df):
         print("2. Women/Men")
         print("3. Total People Embarked (by port)")
         print("4. Total Passengers")
-        print("5. Exit")
+        print("0. Exit")
 
         try:
             choice = int(input("Choose an option: "))
@@ -41,7 +53,7 @@ def sum_menu(df):
                         continue
                 case 4:
                     calculate_sum(df['Fare'])
-                case 5:
+                case 0:
                     return 
                 case _:
                     raise ValueError

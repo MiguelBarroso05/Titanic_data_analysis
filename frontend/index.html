@@ -3,50 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titanic Data Dashboard</title>
+    <title>Titanic Explorer</title>
+    
+    <link rel="icon" type="image/png" href="assets/logo.png">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">Titanic Dashboard</div>
-        <div class="nav-buttons" id="nav-buttons">
-            <button id="load-btn" onclick="fetchAllData()">Load Data</button>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a href="#"><img src="assets/logo.png" class="img-fluid logo" alt="Logo"></a>
+            <a class="navbar-brand" href="#">Titanic Explorer</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#about">Who We Are</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#info">Titanic Info</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#table">Data Table</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#graphs">Graphs</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <!-- Dropdowns para Processamento -->
-    <div id="processing-container" style="display: none;">
-        <select id="processing-type">
-            <option value="">Choose Processing</option>
-            <option value="average">Average</option>
-            <option value="sum">Total</option>
-            <option value="min">Minimum</option>
-            <option value="max">Maximum</option>
-        </select>
-
-        <select id="column-type">
-            <option value="">Choose Column</option>
-            <option value="Age">Age</option>
-            <option value="Fare">Fare</option>
-            <option value="Pclass">Pclass</option>
-        </select>
-
-        <button onclick="processData()">Search</button>
-        <span id="processing-result"></span>
+    <div id="about" class="container mt-5">
+        <h2>Who We Are</h2>
+        <div class="row">
+            <div class="col-md-8">
+                <p>This project was developed by <strong>Marco Cândido</strong> and <strong>Miguel Barroso</strong> under the guidance of the trainee <strong>Nelson Santos</strong> at the <strong>ATEC</strong> institution for the module <em>5417 - Programming for the Web - Server-Side</em> in January 2025.</p>
+            </div>
+            <div class="col-md-4">
+                <img src="assets/atec.jpg" class="img-fluid" alt="ATEC Logo">
+            </div>
+        </div>
     </div>
 
-    <!-- Tabela -->
-    <div id="data-table"></div>
+    <div id="info" class="container mt-5">
+        <h2>Titanic Info</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <img src="assets/titanic.png" class="img-fluid" alt="Titanic Img">
+            </div>
+            <div class="col-md-8">
+                <p>The Titanic project aims to explore and analyze the Titanic dataset, containing information about the passengers and survivors of the infamous disaster. Using Python libraries like Pandas and Matplotlib, the dataset will be manipulated and visualized to provide an in-depth analysis.</p>
+                <p>The Titanic, a British transatlantic ship, sank on its maiden voyage on April 14-15, 1912, after hitting an iceberg in the North Atlantic Ocean. Carrying around 2,200 passengers and crew, about 1,500 lost their lives, making it one of the deadliest maritime disasters in modern history.</p>
+                <p>The dataset focuses on a subset of 400 passengers, providing details such as age, gender, class, and survival status. This data allows for a thorough examination of the factors influencing survival rates during the tragedy.</p>
+            </div>
+        </div>
+    </div>
 
-    <!-- Paginação -->
-    <div id="pagination" style="display: none;"></div>
+    <div id="table" class="container mt-5">
+        <div class="row">
+            <h3>Data Table</h3>
+            <p>Learn more about the crew with data provided by intern Nelson Santos</p>
+            <div class="d-flex align-items-center mt-2">
+                <h4 class="me-3">Search: </h4>
+                <input type="text" id="searchBar" class="form-control mb-3" placeholder="by name" style="max-width: 300px;">
+            </div>
+        </div>    
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th onclick="sortTable('PassengerId')">ID</th>
+                    <th onclick="sortTable('Name')">Name</th>
+                    <th onclick="sortTable('Survived')">Survived</th>
+                    <th onclick="sortTable('Pclass')">Class</th>
+                    <th onclick="sortTable('Sex')">Sex</th>
+                    <th onclick="sortTable('Age')">Age</th>
+                    <th onclick="sortTable('SibSp')">Siblings/Spouses</th>
+                    <th onclick="sortTable('Parch')">Parents/Children</th>
+                    <th onclick="sortTable('Ticket')">Ticket</th>
+                    <th onclick="sortTable('Fare')">Fare</th>
+                    <th onclick="sortTable('Cabin')">Cabin</th>
+                    <th onclick="sortTable('Embarked')">Embarked</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+        <div class="d-flex justify-content-between align-items-center">
+            <div id="paginationInfo" class="text-muted"></div>
+            <div>
+                <button class="btn btn-primary" onclick="prevPage()">Previous</button>
+                <button class="btn btn-primary" onclick="nextPage()">Next</button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>Developed by</p>
-        <p>Project: Titanic Data Analysis</p>
-    </footer>
+    <div id="graphs" class="container mt-5">
+        <h2>Graphs</h2>
+        <div class="d-flex flex-wrap gap-2 mb-3 justify-content-between">
+            <button class="btn btn-secondary" onclick="generateSurvivalChart()">Survival Chart</button>
+            <button class="btn btn-secondary" onclick="generateGenderSurvivalChart()">Survival by Gender</button>
+            <button class="btn btn-secondary" onclick="generateClassDistributionChart()">Class Distribution</button>
+            <button class="btn btn-secondary" onclick="generateClassSurvivalChart()">Survival by Class</button>
+            <button class="btn btn-secondary" onclick="generateEmbarkedSurvivalChart()">Survival by Embarkation Port</button>
+            <button class="btn btn-secondary" onclick="generateAverageAgeChart()">Average Age by Survival</button>
+        </div>
+        <canvas id="chartCanvas" width="400" height="200"></canvas>
+        <div id="chartDescription" class="mt-3 text-muted"></div>
+    </div>
+    
 
     <script src="script.js"></script>
 </body>

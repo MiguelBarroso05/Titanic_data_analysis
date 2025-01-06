@@ -1,64 +1,28 @@
-from flask import jsonify, Blueprint, request
+from flask import Blueprint, jsonify, request
 from database import fetch_data_from_db
-import pandas as pd
-import sqlite3
 
-routes_bp = Blueprint('routes', __name__)
+api = Blueprint('api', __name__)
 
+@api.route('/data', methods=['GET'])
+def get_data():
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+    start = (page - 1) * per_page
+    query = f"SELECT * FROM titanic_data LIMIT {per_page} OFFSET {start}"
+    data = fetch_data_from_db(query)
+    return jsonify(data.to_dict(orient='records'))
 
-@routes_bp.route("/api/data", methods=["GET"])
-def get_all_data():
-    try:
-        query = "SELECT * FROM titanic_data"
-        df = fetch_data_from_db(query)
-        if df.empty:
-            return jsonify({"message": "No data available in the database."}), 200
-        return jsonify(df.to_dict(orient="records"))
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@api.route('/data/sort', methods=['GET'])
+def sort_data():
+    column = request.args.get('column', 'Name')
+    order = request.args.get('order', 'asc')
+    query = f"SELECT * FROM titanic_data ORDER BY {column} {'ASC' if order == 'asc' else 'DESC'}"
+    data = fetch_data_from_db(query)
+    return jsonify(data.to_dict(orient='records'))
 
-
-@routes_bp.route("/api/average_fare", methods=["GET"])
-def get_average_fare():
-    """
-    Route to calculate average (Fare).
-    """
-    try:
-        query = "SELECT AVG(Fare) AS average_fare FROM titanic_data"
-        df = fetch_data_from_db(query)
-        return jsonify({"average_fare": round(df.iloc[0]['average_fare'], 2)})
-    except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({"error": str(e)}), 500
-
-
-@routes_bp.route('/api/process', methods=["GET"])
-def process_data():
-    type_ = request.args.get("type")
-    column = request.args.get("column")
-
-    if not type_ or not column:
-        return jsonify({"error": "Invalid parameters: Both 'type' and 'column' are required."}), 400
-
-    query = f"SELECT {column} FROM titanic_data"
-    try:
-        conn = sqlite3.connect("../db/titanic.sqlite")
-        df = pd.read_sql(query, conn)
-
-        if column not in df.select_dtypes(include=['number']).columns:
-            return jsonify({"error": f"Column '{column}' is not numeric and cannot be processed."}), 400
-
-        if type_ == "average":
-            result = df[column].mean()
-        elif type_ == "sum":
-            result = df[column].sum()
-        elif type_ == "min":
-            result = df[column].min()
-        elif type_ == "max":
-            result = df[column].max()
-        else:
-            return jsonify({"error": "Invalid processing type. Use 'average', 'sum', 'min', or 'max'."}), 400
-
-        return jsonify({"value": round(result, 2)})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@api.route('/data/search', methods=['GET'])
+def search_data():
+    query_param = request.args.get('query', '').lower()
+    query = f"SELECT * FROM titanic_data WHERE LOWER(Name) LIKE '%{query_param}%'"
+    data = fetch_data_from_db(query)
+    return jsonify(data.to_dict(orient='records'))
