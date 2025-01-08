@@ -26,7 +26,7 @@ This is the frontend of the Titanic Data Analysis web application. The frontend 
 *   **Dataset Summary:** View basic statistics about the Titanic dataset, such as the number of passengers, average age, and missing data.
 *   **Survival Analysis:** Display survival rates based on class, gender, and age group with interactive charts.
 *   **Data Visualization:** Display visualizations of survival rates, class distribution, and other key metrics using charts.
-
+*   **Dynamic Graphs and Legends:** The graphs and legends are generated dynamically to provide brief descriptions of the analyzed data. Each chart is accompanied by a short description explaining what the data represents, offering users clear insights into the visualized information.
 * * *
 
 🛠️ Dependencies

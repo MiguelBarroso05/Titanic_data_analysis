@@ -3,7 +3,15 @@ let currentPage = 1;
 let currentSortColumn = null;
 let currentSortOrder = 'asc';
 
-// Fetch table data
+/**
+ * Fetches data from the API and updates the table.
+ *
+ * - Sends a GET request to fetch paginated and sorted data.
+ * - Clears the existing table rows and adds new ones with the fetched data.
+ * - Handles missing values for "Cabin" and "Embarked" by displaying "N/A".
+ * - Logs errors to the console if the fetch fails.
+ */
+
 function fetchTableData() {
     const queryParams = new URLSearchParams({
         page: currentPage,
@@ -38,7 +46,17 @@ function fetchTableData() {
         .catch(error => console.error('Error fetching table data:', error));
 }
 
-// Sort table by column
+/**
+ * Sorts the table based on the specified column.
+ *
+ * - Toggles the sort order (ascending/descending) if the column is already sorted.
+ * - Sets a new column to sort and resets the order to ascending.
+ * - Resets to the first page before fetching the sorted data.
+ * - Calls `fetchTableData` to update the table with the new sort order.
+ *
+ * @param {string} column - The column to sort by.
+ */
+
 function sortTable(column) {
     if (currentSortColumn === column) {
         currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
@@ -52,11 +70,24 @@ function sortTable(column) {
     fetchTableData();
 }
 
-// Pagination
+/**
+ * Moves to the next page and fetches data.
+ *
+ * - Increments the current page number.
+ * - Calls `fetchTableData` to update the table with the next page of data.
+ */
+
 function nextPage() {
     currentPage++;
     fetchTableData();
 }
+
+/**
+ * Moves to the previous page and fetches data.
+ *
+ * - Decrements the current page number, but only if it is greater than 1.
+ * - Calls `fetchTableData` to update the table with the previous page of data.
+ */
 
 function prevPage() {
     if (currentPage > 1) {
@@ -65,7 +96,15 @@ function prevPage() {
     }
 }
 
-// Search functionality
+/**
+ * Searches for data based on the input query and updates the table.
+ *
+ * - Converts the input value to lowercase and sends it as a query to the API.
+ * - Clears the current table rows and populates the table with the search results.
+ * - Handles missing values for "Cabin" and "Embarked" by displaying "N/A".
+ * - Logs errors to the console if the search fails.
+ */
+
 document.getElementById('searchBar').addEventListener('input', function () {
     const query = this.value.toLowerCase();
     fetch(`${baseUrl}/data/search?query=${query}`)
@@ -102,7 +141,20 @@ fetchTableData();
 const chartCanvas = document.getElementById('chartCanvas').getContext('2d');
 let currentChart;
 
-// Updates the chart and the descriptive text
+/**
+ * Updates the chart with new data and options.
+ *
+ * - Destroys the current chart if it exists to ensure a clean update.
+ * - Creates a new horizontal bar chart using the provided data and options.
+ * - Configures the chart to start the x-axis at zero and adjusts the y-axis font size.
+ * - Sets the legend's position to the top of the chart.
+ * - Updates the chart description text displayed in the DOM.
+ *
+ * @param {Object} chartData - The data to display in the chart.
+ * @param {Object} options - Additional configuration options for the chart.
+ * @param {string} description - A description of the chart to display.
+ */
+
 function updateChart(chartData, options, description) {
     if (currentChart) {
         currentChart.destroy();
@@ -135,7 +187,16 @@ function updateChart(chartData, options, description) {
     document.getElementById('chartDescription').innerText = description;
 }
 
-// Survival chart
+/**
+ * Generates a survival chart showing the percentage of passengers who survived and died.
+ *
+ * - Fetches data from the API to calculate survival and death counts.
+ * - Calculates the percentages of survivors and fatalities.
+ * - Updates the chart with the calculated data, using green for survivors and red for fatalities.
+ * - Displays a descriptive text below the chart summarizing the survival statistics.
+ *
+ * Calls the `updateChart` function to render the chart.
+ */
 function generateSurvivalChart() {
     fetch(`${baseUrl}/data`)
         .then(response => response.json())
@@ -169,7 +230,17 @@ function generateSurvivalChart() {
         });
 }
 
-// Survival by gender chart
+/**
+ * Generates a gender-based survival chart comparing male and female survival rates.
+ *
+ * - Fetches data from the API to calculate survival and death counts for males and females.
+ * - Calculates the survival rates for both genders.
+ * - Updates the chart with the calculated data, using green for survivors and red for fatalities.
+ * - Displays a descriptive text below the chart summarizing the gender-based survival statistics.
+ *
+ * Calls the `updateChart` function to render the chart.
+ */
+
 function generateGenderSurvivalChart() {
     fetch(`${baseUrl}/data`)
         .then(response => response.json())
@@ -208,7 +279,16 @@ function generateGenderSurvivalChart() {
         });
 }
 
-// Class distribution chart
+/**
+ * Generates a class distribution chart showing the number of passengers in each class.
+ *
+ * - Fetches data from the API to calculate the number of passengers in each class (1st, 2nd, 3rd).
+ * - Updates the chart with the class counts, using different colors for each class.
+ * - Displays a descriptive text below the chart summarizing the class distribution.
+ *
+ * Calls the `updateChart` function to render the chart.
+ */
+
 function generateClassDistributionChart() {
     fetch(`${baseUrl}/data`)
         .then(response => response.json())
@@ -237,7 +317,15 @@ function generateClassDistributionChart() {
         });
 }
 
-// Survival by class chart
+/**
+ * Generates a class-based survival chart comparing survival rates across classes.
+ *
+ * - Fetches data from the API to calculate the number of survivors and fatalities in each class.
+ * - Updates the chart with the survival and death data, using green for survivors and red for fatalities.
+ * - Displays a descriptive text below the chart summarizing the survival rates by class.
+ *
+ * Calls the `updateChart` function to render the chart.
+ */
 function generateClassSurvivalChart() {
     fetch(`${baseUrl}/data`)
         .then(response => response.json())
@@ -266,7 +354,15 @@ function generateClassSurvivalChart() {
         });
 }
 
-// Survival by embarkation port chart
+/**
+ * Generates a survival chart based on embarkation port.
+ *
+ * - Fetches data from the API to calculate the number of survivors and fatalities for each embarkation port (Cherbourg, Queenstown, Southampton).
+ * - Updates the chart with the survival and death data, using green for survivors and red for fatalities.
+ * - Displays a descriptive text below the chart summarizing the survival rates by embarkation port.
+ *
+ * Calls the `updateChart` function to render the chart.
+ */
 function generateEmbarkedSurvivalChart() {
     fetch(`${baseUrl}/data`)
         .then(response => response.json())
@@ -296,7 +392,15 @@ function generateEmbarkedSurvivalChart() {
         });
 }
 
-// Average age by survival chart
+/**
+ * Generates a chart comparing the average age of survivors and non-survivors.
+ *
+ * - Fetches data from the API and calculates the average age for survivors and fatalities.
+ * - Updates the chart with the calculated average ages, using green for survivors and red for fatalities.
+ * - Displays a descriptive text below the chart summarizing the average ages of survivors and non-survivors.
+ *
+ * Calls the `updateChart` function to render the chart.
+ */
 function generateAverageAgeChart() {
     fetch(`${baseUrl}/data`)
         .then(response => response.json())
